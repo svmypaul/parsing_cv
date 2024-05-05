@@ -5,11 +5,14 @@ import json
 import time
 
 # Define the API endpoint URL
-url = 'http://127.0.0.1:8000/api/user_cv'
+url = 'http://demo.sites4social.com/api/user_cv'
 secret_key = "AIzaSyCKZOEjC7op5FoDG8jeDjmo7PrChWH6E28"
 # Define the API endpoint URL
-URL = "http://127.0.0.1:8000/api/parsed_cv"
+URL = "http://demo.sites4social.com/api/parsed_cv"
 
+headers = {
+    'User-Agent': 'Your User Agent String Here',
+}
 
 def parser(text):
     
@@ -47,7 +50,8 @@ while True:
     print('-------------------------------------------------------------------------')
     time.sleep(10)
     # Make a GET request to the API
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
+    print(response)
     
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
