@@ -79,7 +79,7 @@ while True:
             parsed_data['uniqueid'] = uniqueid
             
     
-            Response = requests.post(URL, json=parsed_data)
+            Response = requests.post(URL, json=parsed_data, headers=headers)
     
             # Check if the request was successful (status code 200)
             if Response.status_code == 200:
