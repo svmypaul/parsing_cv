@@ -3,10 +3,13 @@ import requests
 import google.generativeai as genai
 import json
 import time
+from loguru import logger
+
+logger.add("Error.log", rotation="500 MB") 
 
 # Define the API endpoint URL
 url = 'http://demo.sites4social.com/api/user_cv'
-secret_key = "AIzaSyCKZOEjC7op5FoDG8jeDjmo7PrChWH6E28"
+secret_key = "AIzaSyAO3omBOQaMAJXOCSd07CqZF7_yPLecOlU"
 # Define the API endpoint URL
 URL = "http://demo.sites4social.com/api/parsed_cv"
 
@@ -48,50 +51,55 @@ def parser(text):
     
 while True:
     print('-------------------------------------------------------------------------')
-    time.sleep(10)
-    # Make a GET request to the API
-    response = requests.get(url, headers=headers)
-    print(response)
-    
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        # Extract JSON content from the response
-        json_data = response.json()
+    try:
+        time.sleep(10)
+        # Make a GET request to the API
+        response = requests.get(url, headers=headers)
+        print(response)
         
-        # Iterate over each item in the JSON data
-        for data in json_data:
-            # Extract the 'text' field from each item
-            Id = data.get('id')
-            text = data.get('text')
-            username = data.get('username')
-            filename = data.get('filename')
-            uniqueid = data.get('companyid')
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            # Extract JSON content from the response
+            json_data = response.json()
             
-            # Call the parse_resume function with the extracted text
-            parsed_data = parse_resume(text)
-            ai_parsed_data = parser(text)
-            parsed_data['Name'] = ai_parsed_data['name']
-            parsed_data['Location'] = ai_parsed_data['address']
-            parsed_data['Skills'] = str(parsed_data['Skills'])
-            parsed_data['id'] = Id
-            parsed_data['username'] = username
-            parsed_data['filename'] = filename
-            parsed_data['uniqueid'] = uniqueid
-            
-    
-            Response = requests.post(URL, json=parsed_data, headers=headers)
-    
-            # Check if the request was successful (status code 200)
-            if Response.status_code == 200:
-                print("Data sent successfully!")
-            else:
-                print("Failed to send data. Status code:", response.status_code)
-            print(parsed_data)
-    
-    else:
-        # Print an error message if the request was unsuccessful
-        print(f"Error: {response.status_code}")
-
+            # Iterate over each item in the JSON data
+            for data in json_data:
+                # Extract the 'text' field from each item
+                Id = data.get('id')
+                text = data.get('text')
+                username = data.get('username')
+                filename = data.get('filename')
+                uniqueid = data.get('companyid')
+                
+                # Call the parse_resume function with the extracted text
+                parsed_data = parse_resume(text)
+                ai_parsed_data = parser(text)
+                parsed_data['Name'] = ai_parsed_data['name']
+                parsed_data['Location'] = ai_parsed_data['address']
+                parsed_data['Skills'] = str(parsed_data['Skills'])
+                parsed_data['id'] = Id
+                parsed_data['username'] = username
+                parsed_data['filename'] = filename
+                parsed_data['uniqueid'] = uniqueid
+                
+        
+                Response = requests.post(URL, json=parsed_data, headers=headers)
+        
+                # Check if the request was successful (status code 200)
+                if Response.status_code == 200:
+                    print("Data sent successfully!")
+                    logger.success("Data sent successfully!")
+                else:
+                    print("Failed to send data. Status code:", response.status_code)
+                    logger.error(f"Failed to send data. Status code: {response.status_code}")
+                print(parsed_data)
+        
+        else:
+            # Print an error message if the request was unsuccessful
+            logger.error(f"Error: {response.status_code}")
+    except Exception as e:
+        print('Global Error:',e)
+        logger.error(f'global error: {e}')
 
 
 
