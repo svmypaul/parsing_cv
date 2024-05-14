@@ -70,6 +70,7 @@ while True:
                 username = data.get('username')
                 filename = data.get('filename')
                 uniqueid = data.get('companyid')
+                datetime = data.get('time')
                 
                 # Call the parse_resume function with the extracted text
                 parsed_data = parse_resume(text)
@@ -81,6 +82,7 @@ while True:
                 parsed_data['username'] = username
                 parsed_data['filename'] = filename
                 parsed_data['uniqueid'] = uniqueid
+                parsed_data['time'] = datetime
                 
         
                 Response = requests.post(URL, json=parsed_data, headers=headers)
