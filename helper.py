@@ -100,6 +100,7 @@ while True:
     except Exception as e:
         print('Global Error:',e)
         logger.error(f'global error: {e}')
+        pass
 
 
 
