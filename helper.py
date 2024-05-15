@@ -73,6 +73,7 @@ while True:
                 datetime = data.get('time')
                 
                 # Call the parse_resume function with the extracted text
+                parsed_data = parse_resume(text)
                 try:
                     ai_parsed_data = parser(text)
                     parsed_data['Name'] = ai_parsed_data['name']
@@ -81,7 +82,7 @@ while True:
                     logger.error(f'Ai parsing Error: {e}')
                     pass
 
-                parsed_data = parse_resume(text)
+                
                 parsed_data['Skills'] = str(parsed_data['Skills'])
                 parsed_data['id'] = Id
                 parsed_data['username'] = username
