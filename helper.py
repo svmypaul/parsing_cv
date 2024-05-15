@@ -77,7 +77,8 @@ while True:
                     ai_parsed_data = parser(text)
                     parsed_data['Name'] = ai_parsed_data['name']
                     parsed_data['Location'] = ai_parsed_data['address']
-                except:
+                except Exception as e:
+                    logger.error(f'Ai parsing Error: {e}')
                     pass
 
                 parsed_data = parse_resume(text)
